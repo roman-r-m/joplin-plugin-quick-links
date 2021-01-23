@@ -1,6 +1,6 @@
 {
 	"manifest_version": 1,
-	"id": "quick-links",
+	"id": "com.whatever.quick-links",
 	"app_min_version": "1.7",
 	"version": "0.0.1",
 	"name": "Quick Links",
