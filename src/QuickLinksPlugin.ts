@@ -16,7 +16,7 @@ module.exports = {
                     hint: async (cm, data, completion) => {
                         const from = completion.from || data.from;
                         from.ch -= 2;
-                        cm.replaceRange(`[${note.title}](:/${note.id})`, from, completion.to || data.to, "complete");
+                        cm.replaceRange(`[${note.title}](:/${note.id})`, from, cm.getCursor(), "complete");
                     }
                 });
 			}
