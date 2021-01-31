@@ -7,7 +7,7 @@ async function getNotes(prefix: string): Promise<any[]> {
 			fields: ['id', 'title'],
 			order_by: 'updated_time',
 			order_dir: 'DESC',
-			limit: 10,
+			limit: 11,
 		});
 		return notes.items;
 	} else {
