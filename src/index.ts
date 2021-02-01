@@ -13,7 +13,7 @@ async function getNotes(prefix: string): Promise<any[]> {
 	} else {
 		const notes = await joplin.data.get(['search'], {
 			fields: ['id', 'title'],
-			limit: 11,
+			limit: 21,
 			query: `title:${prefix.trimRight()}*`,
 		});
 		return notes.items;
