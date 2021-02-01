@@ -49,6 +49,7 @@ module.exports = {
 								completeSingle: false,
 								closeOnUnfocus: true,
 								async: true,
+								closeCharacters: /[()\[\]{};:>,]/
 							});
 						}, 10);
 					}
