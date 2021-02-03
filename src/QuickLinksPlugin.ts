@@ -1,24 +1,43 @@
+interface Hint {
+	text: string;
+	hint: Function;
+	displayText?: string;
+	render?: Function;
+}
+
 module.exports = {
 	default: function(context: any) {
 
 		const buildHints = async (prefix: string) =>{
-			const notes = await context.postMessage({
-                command: 'getNotes',
-                prefix: prefix,
-            });
+			const response = await context.postMessage({ command: 'getNotes', prefix: prefix });
 
-            let hints = [];
+			let hints: Hint[] = [];
+			const notes = response.notes;
 			for (let i = 0; i < notes.length; i++) {
 				const note = notes[i];
-                hints.push({
+				const hint: Hint = {
                     text: note.title,
-                    displayText: note.title,
                     hint: async (cm, data, completion) => {
                         const from = completion.from || data.from;
                         from.ch -= 2;
                         cm.replaceRange(`[${note.title}](:/${note.id})`, from, cm.getCursor(), "complete");
-                    }
-                });
+					},
+				};
+				if (response.showFolders) {
+					const folder = !!note.folder ? note.folder  : "unknown";
+					hint.render = (elem, _data, _completion) => {
+						const p = elem.ownerDocument.createElement('div');
+						p.setAttribute('style', 'width: 100%; display:table;');
+						elem.appendChild(p);
+						p.innerHTML = `
+						<div style="display:table-cell; padding-right: 5px">${note.title}</div>
+						<div style="display:table-cell; text-align: right;"><small><em>In ${note.folder}</em></small></div>
+						`
+					};
+				} else {
+					hint.displayText = note.title;
+				}
+                hints.push(hint);
 			}
 			return hints;
 		}
