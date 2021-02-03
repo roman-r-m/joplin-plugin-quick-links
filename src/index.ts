@@ -1,19 +1,21 @@
 import joplin from 'api';
 import { ContentScriptType, Path } from 'api/types';
 
+const NUM_RESULTS = 21;
+
 async function getNotes(prefix: string): Promise<any[]> {
 	if (prefix === "") {
 		const notes = await joplin.data.get(['notes'], {
 			fields: ['id', 'title'],
 			order_by: 'updated_time',
 			order_dir: 'DESC',
-			limit: 11,
+			limit: NUM_RESULTS,
 		});
 		return notes.items;
 	} else {
 		const notes = await joplin.data.get(['search'], {
 			fields: ['id', 'title'],
-			limit: 21,
+			limit: NUM_RESULTS,
 			query: `title:${prefix.trimRight()}*`,
 		});
 		return notes.items;
