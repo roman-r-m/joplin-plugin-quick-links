@@ -62,6 +62,7 @@ async function initSettings() {
 	await joplin.settings.registerSection(SECTION, {
 		description: 'Quick Links Plugin Settings',
 		label: 'Quick Links',
+		iconName: 'fas fa-link'
 	});
 	await joplin.settings.registerSetting(SETTING_SHOW_FOLDERS, {
 		public: true,
