@@ -107,6 +107,19 @@ joplin.plugins.register({
 				});
 				return { notes: res, showFolders: showFolders };
 			}
+			else if(message.command === 'createNote')
+			{
+				const activeNote = await joplin.workspace.selectedNote();
+				const activeNotesFolder = await joplin.data.get(['folders', activeNote.parent_id]);
+				const newNote = await joplin.data.post(['notes'], null,
+					{
+						is_todo: message.todo,
+						title: message.title,
+						parent_id: activeNotesFolder.id
+					});
+
+				return {newNote: newNote};
+			}
 		});
 	}
 });

@@ -8,10 +8,45 @@ interface Hint {
 module.exports = {
 	default: function(context: any) {
 
+		function NewNoteHint(prefix: string, todo: boolean) {
+			let description = "New Note";
+
+			if(todo)
+				description = "New Task";
+
+			const newNoteHint: Hint = {
+				text: prefix,
+				hint: async (cm, data, completion) => {
+					const from = completion.from || data.from;
+					from.ch -= 2;
+
+					const response = await context.postMessage({command: 'createNote', prefix: prefix, todo: todo});
+					cm.replaceRange(`[${prefix}](:/${response.newNote.id})`, from, cm.getCursor(), "complete");
+				},
+			};
+
+			newNoteHint.render = (elem, _data, _completion) => {
+				const p = elem.ownerDocument.createElement('div');
+				p.setAttribute('style', 'width: 100%; display:table;');
+				elem.appendChild(p);
+				p.innerHTML = `
+						<div style="display:table-cell; padding-right: 5px">${prefix}</div>
+						<div style="display:table-cell; text-align: right;"><small><em>${description}</em></small></div>
+						`
+			};
+			return newNoteHint;
+		}
+
 		const buildHints = async (prefix: string) =>{
 			const response = await context.postMessage({ command: 'getNotes', prefix: prefix });
 
 			let hints: Hint[] = [];
+
+			if(prefix) {
+				hints.push(NewNoteHint(prefix, false));
+				hints.push(NewNoteHint(prefix, true));
+			}
+
 			const notes = response.notes;
 			for (let i = 0; i < notes.length; i++) {
 				const note = notes[i];
@@ -39,6 +74,7 @@ module.exports = {
 				}
                 hints.push(hint);
 			}
+
 			return hints;
 		}
 
