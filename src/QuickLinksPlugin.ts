@@ -20,7 +20,7 @@ module.exports = {
 					const from = completion.from || data.from;
 					from.ch -= 2;
 
-					const response = await context.postMessage({command: 'createNote', prefix: prefix, todo: todo});
+					const response = await context.postMessage({command: 'createNote', title: prefix, todo: todo});
 					cm.replaceRange(`[${prefix}](:/${response.newNote.id})`, from, cm.getCursor(), "complete");
 				},
 			};
