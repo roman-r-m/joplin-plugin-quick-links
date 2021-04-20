@@ -4,15 +4,21 @@ import { ContentScriptType, SettingItem, SettingItemType } from 'api/types';
 const NUM_RESULTS = 21;
 const FOLDERS_REFRESH_INTERVAL = 6000;
 const SETTING_SHOW_FOLDERS = 'showFolders';
+const SETTING_ALLOW_NEW_NOTES	 = 'allowNewNotes';
 
 let showFolders = false;
+let allowNewNotes = false;
 let folders = {};
 
 async function onShowFolderSettingChanged() {
 	showFolders = await joplin.settings.value(SETTING_SHOW_FOLDERS);
 	if (showFolders) {
-		refreshFolderList();
+		await refreshFolderList();
 	}
+}
+
+async function onAllowNewNotesSettingChanged() {
+	allowNewNotes = await joplin.settings.value(SETTING_ALLOW_NEW_NOTES);
 }
 
 async function refreshFolderList() {
@@ -72,12 +78,27 @@ async function initSettings() {
 		label: 'Show Notebooks',
 	} as SettingItem);
 
+	await joplin.settings.registerSetting(SETTING_ALLOW_NEW_NOTES, {
+		public: true,
+		section: SECTION,
+		type: SettingItemType.Bool,
+		value: allowNewNotes,
+		label: 'Allow new Notes',
+	} as SettingItem);
+
 	await onShowFolderSettingChanged();
 
+	await onAllowNewNotesSettingChanged();
+
 	await joplin.settings.onChange(change => {
-		const idx = change.keys.indexOf(SETTING_SHOW_FOLDERS);
-		if (idx >= 0) {
+		const showFoldersIdx = change.keys.indexOf(SETTING_SHOW_FOLDERS);
+		if (showFoldersIdx >= 0) {
 			onShowFolderSettingChanged();
+		}
+
+		const allowNewNotesIdx = change.keys.indexOf(SETTING_ALLOW_NEW_NOTES);
+		if (allowNewNotesIdx >= 0) {
+			onAllowNewNotesSettingChanged();
 		}
 	});
 }
@@ -105,7 +126,7 @@ joplin.plugins.register({
 						folder: folders[n.parent_id],
 					};
 				});
-				return { notes: res, showFolders: showFolders };
+				return { notes: res, showFolders: showFolders, allowNewNotes: allowNewNotes};
 			}
 			else if(message.command === 'createNote')
 			{

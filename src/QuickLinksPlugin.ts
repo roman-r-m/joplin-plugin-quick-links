@@ -42,7 +42,7 @@ module.exports = {
 
 			let hints: Hint[] = [];
 
-			if(prefix) {
+			if(response.allowNewNotes && prefix) {
 				hints.push(NewNoteHint(prefix, false));
 				hints.push(NewNoteHint(prefix, true));
 			}
