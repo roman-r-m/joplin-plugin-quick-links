@@ -42,11 +42,6 @@ module.exports = {
 
 			let hints: Hint[] = [];
 
-			if(response.allowNewNotes && prefix) {
-				hints.push(NewNoteHint(prefix, false));
-				hints.push(NewNoteHint(prefix, true));
-			}
-
 			const notes = response.notes;
 			for (let i = 0; i < notes.length; i++) {
 				const note = notes[i];
@@ -66,13 +61,18 @@ module.exports = {
 						elem.appendChild(p);
 						p.innerHTML = `
 						<div style="display:table-cell; padding-right: 5px">${note.title}</div>
-						<div style="display:table-cell; text-align: right;"><small><em>In ${note.folder}</em></small></div>
+						<div style="display:table-cell; text-align: right;"><small><em>In ${folder}</em></small></div>
 						`
 					};
 				} else {
 					hint.displayText = note.title;
 				}
                 hints.push(hint);
+			}
+
+			if(response.allowNewNotes && prefix) {
+				hints.push(NewNoteHint(prefix, false));
+				hints.push(NewNoteHint(prefix, true));
 			}
 
 			return hints;
