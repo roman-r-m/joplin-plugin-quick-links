@@ -1,3 +1,6 @@
+# Quick Links Plugin : Fork to add wikipedia articles
+This is a fork from Roman-rm's [Quick Links Plugin](https://github.com/roman-r-m/joplin-plugin-quick-links) adding Wikipedia articles to the list. It's very much a work in progress.
+
 # Quick Links Plugin for Joplin 
 
 This Plugin for the note taking app [Joplin](https://joplinapp.org/) gives you a quicker way to add Links to other notes.
