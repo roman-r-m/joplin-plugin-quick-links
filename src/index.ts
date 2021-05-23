@@ -5,9 +5,11 @@ const NUM_RESULTS = 21;
 const FOLDERS_REFRESH_INTERVAL = 6000;
 const SETTING_SHOW_FOLDERS = 'showFolders';
 const SETTING_ALLOW_NEW_NOTES	 = 'allowNewNotes';
+const SETTING_USE_WIKIPEDIA = 'useWikipedia';
 
 let showFolders = false;
 let allowNewNotes = false;
+let useWikipedia = false;
 let folders = {};
 
 async function onShowFolderSettingChanged() {
@@ -19,6 +21,11 @@ async function onShowFolderSettingChanged() {
 
 async function onAllowNewNotesSettingChanged() {
 	allowNewNotes = await joplin.settings.value(SETTING_ALLOW_NEW_NOTES);
+}
+
+
+async function onUseWikipediaSettingChanged() {
+	useWikipedia = await joplin.settings.value(SETTING_USE_WIKIPEDIA);
 }
 
 async function refreshFolderList() {
@@ -86,9 +93,19 @@ async function initSettings() {
 		label: 'Allow new Notes',
 	} as SettingItem);
 
+	await joplin.settings.registerSetting(SETTING_USE_WIKIPEDIA, {
+		public: true,
+		section: SECTION,
+		type: SettingItemType.Bool,
+		value: useWikipedia,
+		label: 'Include results from Wikipedia',
+	} as SettingItem);
+
 	await onShowFolderSettingChanged();
 
 	await onAllowNewNotesSettingChanged();
+
+	await onUseWikipediaSettingChanged();
 
 	await joplin.settings.onChange(change => {
 		const showFoldersIdx = change.keys.indexOf(SETTING_SHOW_FOLDERS);
@@ -99,6 +116,11 @@ async function initSettings() {
 		const allowNewNotesIdx = change.keys.indexOf(SETTING_ALLOW_NEW_NOTES);
 		if (allowNewNotesIdx >= 0) {
 			onAllowNewNotesSettingChanged();
+		}
+
+		const useWikipediaIdx = change.keys.indexOf(SETTING_USE_WIKIPEDIA);
+		if (useWikipediaIdx >= 0) {
+			onUseWikipediaSettingChanged();
 		}
 	});
 }
@@ -126,7 +148,7 @@ joplin.plugins.register({
 						folder: folders[n.parent_id],
 					};
 				});
-				return { notes: res, showFolders: showFolders, allowNewNotes: allowNewNotes};
+				return { notes: res, showFolders: showFolders, allowNewNotes: allowNewNotes, useWikipedia: useWikipedia};
 			}
 			else if(message.command === 'createNote')
 			{

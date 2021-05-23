@@ -71,23 +71,23 @@ module.exports = {
 			}
 
 			//get wikipedia articles
-			if (prefix){
+			if (response.useWikipedia && prefix){
 				//query wikipedia
 				var request = new XMLHttpRequest()
 				request.open('GET', 'https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srlimit=5&srsearch='+prefix, false)
 				request.send()
 				var data = JSON.parse(request.response)
 				if (request.status >= 200 && request.status < 400) {
-					var results = data.query.search
+					const results = data.query.search
 					for (let i = 0; i < results.length; i++){
-						var article = results[i]
-						console.log(article.title)
+						const article = results[i]
+						//console.log(article.title)
 						const hint0: Hint = {
 							text: article.title,
 							hint: async (cm, data, completion) => {
 								const from = completion.from || data.from;
 								from.ch -= 2;
-								cm.replaceRange(`[${article.title}](https://en.wikipedia.org/wiki/${article.title})`, from, cm.getCursor(), "complete");
+								cm.replaceRange(`[${article.title}](https://en.wikipedia.org/w/index.php?curid=${article.pageid})`, from, cm.getCursor(), "complete");
 							},
 						};
 						if (response.showFolders) {
@@ -109,13 +109,13 @@ module.exports = {
 					console.log('error')
 				}
 			}
-			
 
 			if(response.allowNewNotes && prefix) {
 				hints.push(NewNoteHint(prefix, false));
 				hints.push(NewNoteHint(prefix, true));
 			}
 
+			console.log(hints)
 			return hints;
 		}
 
@@ -124,8 +124,8 @@ module.exports = {
 				if (!value) return;
 
 				cm.on('inputRead', async function (cm1, change) {
-                    if (!cm1.state.completionActive && cm.getTokenAt(cm.getCursor()).string === '@@') {
-                        const start = {line: change.from.line, ch: change.from.ch + 1};
+					if (!cm1.state.completionActive && cm.getTokenAt(cm.getCursor()).string === '@@') {
+						const start = {line: change.from.line, ch: change.from.ch + 1};
 
 						const hint = function(cm, callback) {
 							const cursor = cm.getCursor();
