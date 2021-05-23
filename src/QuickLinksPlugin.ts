@@ -106,7 +106,7 @@ module.exports = {
 						hints.push(hint0);
 					}
 				} else {
-					console.log('error')
+					console.log('Error in Wikipedia API response')
 				}
 			}
 
@@ -115,7 +115,6 @@ module.exports = {
 				hints.push(NewNoteHint(prefix, true));
 			}
 
-			console.log(hints)
 			return hints;
 		}
 
