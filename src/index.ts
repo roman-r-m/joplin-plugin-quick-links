@@ -1,5 +1,5 @@
 import joplin from 'api';
-import { ContentScriptType, SettingItem, SettingItemType } from 'api/types';
+import { ContentScriptType, SettingItemType } from 'api/types';
 
 const NUM_RESULTS = 21;
 const FOLDERS_REFRESH_INTERVAL = 6000;
@@ -70,21 +70,23 @@ async function initSettings() {
 		label: 'Quick Links',
 		iconName: 'fas fa-link'
 	});
-	await joplin.settings.registerSetting(SETTING_SHOW_FOLDERS, {
-		public: true,
-		section: SECTION,
-		type: SettingItemType.Bool,
-		value: showFolders,
-		label: 'Show Notebooks',
-	} as SettingItem);
 
-	await joplin.settings.registerSetting(SETTING_ALLOW_NEW_NOTES, {
-		public: true,
-		section: SECTION,
-		type: SettingItemType.Bool,
-		value: allowNewNotes,
-		label: 'Allow new Notes',
-	} as SettingItem);
+	await joplin.settings.registerSettings({
+		[SETTING_SHOW_FOLDERS]: { 
+			public: true,
+			section: SECTION,
+			type: SettingItemType.Bool,
+			value: showFolders,
+			label: 'Show Notebooks',
+		},
+		[SETTING_ALLOW_NEW_NOTES]: {
+			public: true,
+			section: SECTION,
+			type: SettingItemType.Bool,
+			value: allowNewNotes,
+			label: 'Allow new Notes',
+		}
+	});
 
 	await onShowFolderSettingChanged();
 
