@@ -2,7 +2,7 @@ import joplin from 'api';
 import { ContentScriptType, SettingItemType } from 'api/types';
 
 const NUM_RESULTS = 21;
-const FOLDERS_REFRESH_INTERVAL = 6000;
+const FOLDERS_REFRESH_INTERVAL = 60000;
 const SETTING_SHOW_FOLDERS = 'showFolders';
 const SETTING_ALLOW_NEW_NOTES	 = 'allowNewNotes';
 
