@@ -4,10 +4,12 @@ import { ContentScriptType, SettingItemType } from 'api/types';
 const NUM_RESULTS = 21;
 const FOLDERS_REFRESH_INTERVAL = 60000;
 const SETTING_SHOW_FOLDERS = 'showFolders';
-const SETTING_ALLOW_NEW_NOTES	 = 'allowNewNotes';
+const SETTING_ALLOW_NEW_NOTES = 'allowNewNotes';
+const SETTING_SELECT_TEXT = 'selectText';
 
 let showFolders = false;
 let allowNewNotes = false;
+let selectText = false;
 let folders = {};
 
 async function onShowFolderSettingChanged() {
@@ -19,6 +21,10 @@ async function onShowFolderSettingChanged() {
 
 async function onAllowNewNotesSettingChanged() {
 	allowNewNotes = await joplin.settings.value(SETTING_ALLOW_NEW_NOTES);
+}
+
+async function onSelectTextSettingChanged() {
+	selectText = await joplin.settings.value(SETTING_SELECT_TEXT);
 }
 
 async function refreshFolderList() {
@@ -84,24 +90,36 @@ async function initSettings() {
 			section: SECTION,
 			type: SettingItemType.Bool,
 			value: allowNewNotes,
-			label: 'Allow new Notes',
-		}
+			label: 'Allow new notes',
+		},
+		[SETTING_SELECT_TEXT]: {
+			public: true,
+			section: SECTION,
+			type: SettingItemType.Bool,
+			value: selectText,
+			label: 'Select link text after inserting',
+		}		
 	});
 
 	await onShowFolderSettingChanged();
 
 	await onAllowNewNotesSettingChanged();
+	await onAllowNewNotesSettingChanged();
+	await onSelectTextSettingChanged();
 
 	await joplin.settings.onChange(change => {
 		const showFoldersIdx = change.keys.indexOf(SETTING_SHOW_FOLDERS);
 		if (showFoldersIdx >= 0) {
 			onShowFolderSettingChanged();
 		}
-
 		const allowNewNotesIdx = change.keys.indexOf(SETTING_ALLOW_NEW_NOTES);
 		if (allowNewNotesIdx >= 0) {
 			onAllowNewNotesSettingChanged();
 		}
+		const selectTextIdx = change.keys.indexOf(SETTING_SELECT_TEXT);
+		if (selectTextIdx >= 0) {
+			onSelectTextSettingChanged();
+		}		
 	});
 }
 
