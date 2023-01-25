@@ -143,10 +143,15 @@ joplin.plugins.register({
 					return {
 						id: n.id,
 						title: n.title,
-						folder: folders[n.parent_id],
+						folder: folders[n.parent_id]
 					};
 				});
-				return { notes: res, showFolders: showFolders, allowNewNotes: allowNewNotes};
+				return {
+					notes: res,
+					showFolders: showFolders,
+					allowNewNotes: allowNewNotes,
+					selectText: selectText
+				};
 			}
 			else if(message.command === 'createNote')
 			{

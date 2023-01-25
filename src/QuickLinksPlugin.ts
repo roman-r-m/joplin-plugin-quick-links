@@ -1,3 +1,5 @@
+import { Editor } from "codemirror";
+
 interface Hint {
 	text: string;
 	hint: Function;
@@ -47,10 +49,17 @@ module.exports = {
 				const note = notes[i];
 				const hint: Hint = {
                     text: note.title,
-                    hint: async (cm, data, completion) => {
+                    hint: async (cm: Editor, data, completion) => {
                         const from = completion.from || data.from;
                         from.ch -= 2;
                         cm.replaceRange(`[${note.title}](:/${note.id})`, from, cm.getCursor(), "complete");
+						if (response.selectText) {
+							const selectionStart = Object.assign({}, from);
+							const selectionEnd = Object.assign({}, from);
+							selectionStart.ch += 1;
+							selectionEnd.ch += 1 + note.title.length;
+							cm.setSelection(selectionStart, selectionEnd)
+						}
 					},
 				};
 				if (response.showFolders) {
