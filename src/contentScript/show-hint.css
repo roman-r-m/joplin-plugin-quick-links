@@ -22,7 +22,7 @@
 }
 
 .quick-links-completions.cm-tooltip li {
-	font-family: sans-serif;
+  font-family: sans-serif;
 }
 
 .CodeMirror-hint, .quick-links-completions li {
