@@ -130,7 +130,7 @@ joplin.plugins.register({
 		await joplin.contentScripts.register(
 			ContentScriptType.CodeMirrorPlugin,
 			'quickLinks',
-			'./QuickLinksPlugin.js'
+			'./contentScript/index.js'
 		);
 
 		await joplin.contentScripts.onMessage('quickLinks', async (message: any) => {

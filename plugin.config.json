@@ -1,5 +1,5 @@
 {
 	"extraScripts": [
-		"QuickLinksPlugin.ts"
+		"contentScript/index.ts"
 	]
 }
