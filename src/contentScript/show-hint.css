@@ -1,4 +1,4 @@
-.CodeMirror-hints {
+.CodeMirror-hints, .quick-links-completions.cm-tooltip {
   position: absolute;
   z-index: 10;
   overflow: hidden;
@@ -13,7 +13,7 @@
   border-radius: 3px;
   border: 1px solid silver;
 
-  background: white;
+  background-color: white;
   font-size: 90%;
   font-family: monospace;
 
@@ -21,7 +21,11 @@
   overflow-y: auto;
 }
 
-.CodeMirror-hint {
+.quick-links-completions.cm-tooltip li {
+  font-family: sans-serif;
+}
+
+.CodeMirror-hint, .quick-links-completions li {
   margin: 0;
   padding: 0 4px;
   border-radius: 2px;
@@ -30,7 +34,9 @@
   cursor: pointer;
 }
 
-li.CodeMirror-hint-active {
+li.CodeMirror-hint-active, .quick-links-completions li[aria-selected] {
   background: #08f;
   color: white;
 }
+
+
