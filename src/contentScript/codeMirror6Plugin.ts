@@ -9,6 +9,7 @@ import type * as CodeMirrorStateType from '@codemirror/state';
 
 import type { CompletionContext, CompletionResult, Completion } from '@codemirror/autocomplete';
 import type { EditorView } from '@codemirror/view';
+import type { Extension } from '@codemirror/state';
 
 import { PluginContext } from './types';
 
@@ -93,10 +94,22 @@ export default function codeMirror6Plugin(pluginContext: PluginContext, CodeMirr
 		};
 	};
 
-	CodeMirror.addExtension([
-		autocompletion({
-			activateOnTyping: true,
+	let extension: Extension;
+
+	if (CodeMirror.joplinExtensions) {
+		extension = CodeMirror.joplinExtensions.completionSource(completeMarkdown);
+	} else {
+		// The override field doesn't work if there are multiple
+		// plugins that try to use autocomplete. As such, only use it
+		// if the Joplin autocomplete extension isn't available.
+		extension = autocompletion({
 			override: [ completeMarkdown ],
+		});
+	}
+
+	CodeMirror.addExtension([
+		extension,
+		autocompletion({
 			tooltipClass: () => 'quick-links-completions',
 		}),
 	]);
