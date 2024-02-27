@@ -18,14 +18,16 @@ export default function codeMirror6Plugin(pluginContext: PluginContext, CodeMirr
 	const { EditorSelection } = require('@codemirror/state') as typeof CodeMirrorStateType;
 
 	const completeMarkdown = async (completionContext: CompletionContext): Promise<CompletionResult> => {
-		const prefix = completionContext.matchBefore(/[@][@]\w+/);
+		// Start completions on @@, match any characters that aren't in "()[]{};>,\n"
+		const prefix = completionContext.matchBefore(/[@][@][^()\[\]{};:>,\n]*/);
 		if (!prefix || (prefix.from === prefix.to && !completionContext.explicit)) {
 			return null;
 		}
 
+		const searchText = prefix.text.substring(2); // Remove @@s
 		const response = await pluginContext.postMessage({
 			command: 'getNotes',
-			prefix: prefix.text,
+			prefix: searchText,
 		});
 
 		const createApplyCompletionFn = (noteTitle: string, noteId: string) => {
@@ -63,7 +65,7 @@ export default function codeMirror6Plugin(pluginContext: PluginContext, CodeMirr
 		}
 
 		const addNewNoteCompletion = (todo: boolean) => {
-			const title = prefix.text.substring(2);
+			const title = searchText;
 			const description = todo ? 'New Task' : 'New Note';
 			completions.push({
 				label: description,
@@ -81,7 +83,7 @@ export default function codeMirror6Plugin(pluginContext: PluginContext, CodeMirr
 			});
 		};
 
-		if (response.allowNewNotes) {
+		if (response.allowNewNotes && searchText.length > 0) {
 			addNewNoteCompletion(true);
 			addNewNoteCompletion(false);
 		}
