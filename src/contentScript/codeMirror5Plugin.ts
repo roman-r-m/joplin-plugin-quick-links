@@ -90,7 +90,7 @@ export default function codeMirror5Plugin(context: PluginContext, CodeMirror: an
 		if (!value) return;
 
 		cm.on('inputRead', async function (cm1, change) {
-			if (!cm1.state.completionActive && cm.getTokenAt(cm.getCursor()).string === '@@') {
+			if (!cm1.state.completionActive && cm.getTokenAt(cm.getCursor()).string.startsWith('@@')) {
 				const start = {line: change.from.line, ch: change.from.ch + 1};
 
 				const hint = function(cm, callback) {
