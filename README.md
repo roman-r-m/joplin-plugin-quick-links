@@ -22,7 +22,7 @@ The main two files you will want to look at are:
 
 ## Building the plugin
 
-The plugin is built using Webpack, which creates the compiled code in `/dist`. A JPL archive will also be created at the root, which can use to distribute the plugin.
+The plugin is built using Webpack, which creates the compiled code in `/dist`. A JPL archive will also be created at the root, which can be used to distribute the plugin.
 
 To build the plugin, simply run `npm run dist`.
 
